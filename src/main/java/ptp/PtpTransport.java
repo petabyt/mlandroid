@@ -21,64 +21,85 @@ package fm.magiclantern.app;
 
 import java.util.concurrent.BlockingQueue;
 
-
 public abstract class PtpTransport {
+	public abstract static class ResponderAddress {}
+	public abstract static class HostId {}
 
-    public abstract static class ResponderAddress {}
-    public abstract static class HostId {}
+	public abstract static class TransportError extends Exception {
+		public TransportError(String s) {
+			super(s);
+		}
+		public TransportError(String s, Throwable cause) {
+			super(s, cause);
+		}
+	}
+	public abstract static class TransportOperationFailed extends TransportError {
+		public TransportOperationFailed(String s) {
+			super(s);
+		}
+		public TransportOperationFailed(String s, Throwable cause) {
+			super(s, cause);
+		}
+	}
+	public abstract static class TransportDataError extends TransportError {
+		public TransportDataError(String s) {
+			super(s);
+		}
+		public TransportDataError(String s, Throwable cause) {
+			super(s, cause);
+		}
+	}
+	public abstract static class TransportIOError extends TransportError {
+		public TransportIOError(String s) {
+			super(s);
+		}
+		public TransportIOError(String s, Throwable cause) {
+			super(s, cause);
+		}
+	}
 
+	public interface Session {
+		public interface DataLoadListener {
+			void onDataLoaded(PtpOperation.Request request, long loaded, long expected);
+		}
 
-    public abstract static class TransportError extends Exception {
-        public TransportError(String s) {super(s);}
-        public TransportError(String s, Throwable cause) {super(s, cause);}
-    }
-    public abstract static class TransportOperationFailed extends TransportError {
-        public TransportOperationFailed(String s) {super(s);}
-        public TransportOperationFailed(String s, Throwable cause) {super(s, cause);}
-    }
-    public abstract static class TransportDataError extends TransportError {
-        public TransportDataError(String s) {super(s);}
-        public TransportDataError(String s, Throwable cause) {super(s, cause);}
-    }
-    public abstract static class TransportIOError extends TransportError {
-        public TransportIOError(String s) {super(s);}
-        public TransportIOError(String s, Throwable cause) {super(s, cause);}
-    }
+		PtpOperation.Response executeTransaction(PtpOperation.Request request)
+			throws TransportDataError, TransportIOError, TransportOperationFailed;
+		PtpOperation.Response executeTransaction(PtpOperation.Request request,
+							 DataLoadListener listener)
+			throws TransportDataError, TransportIOError, TransportOperationFailed;
+		void close() throws TransportDataError, TransportIOError, TransportOperationFailed,
+				    PtpExceptions.PtpProtocolViolation;
+	}
 
+	public interface PayloadBuffer {
+		PayloadBuffer writeUInt8(short value);
+		PayloadBuffer writeUInt16(int value);
+		PayloadBuffer writeUInt32(long value);
+		PayloadBuffer writeUInt64(long value);
+		PayloadBuffer writeObject(byte[] object);
 
-    public interface Session {
-        public interface DataLoadListener {void onDataLoaded(PtpOperation.Request request, long loaded, long expected);}
+		short readUInt8() throws TransportDataError;
+		int readUInt16() throws TransportDataError;
+		long readUInt32() throws TransportDataError;
+		long readUInt64() throws TransportDataError;
+		byte[] readObject();
+	}
 
-        PtpOperation.Response executeTransaction(PtpOperation.Request request) throws TransportDataError, TransportIOError, TransportOperationFailed;
-        PtpOperation.Response executeTransaction(PtpOperation.Request request, DataLoadListener listener) throws TransportDataError, TransportIOError, TransportOperationFailed;
-        void close() throws TransportDataError, TransportIOError, TransportOperationFailed, PtpExceptions.PtpProtocolViolation;
-    }
+	public abstract BlockingQueue<PtpEvent> getEventQueue();
 
+	public abstract PtpDataType.DeviceInfoDataSet getDeviceInfo()
+		throws TransportOperationFailed, TransportDataError, TransportIOError,
+		       PtpExceptions.PtpProtocolViolation;
 
-    public interface PayloadBuffer {
-        PayloadBuffer writeUInt8 (short  value);
-        PayloadBuffer writeUInt16(int    value);
-        PayloadBuffer writeUInt32(long   value);
-        PayloadBuffer writeUInt64(long   value);
-        PayloadBuffer writeObject(byte[] object);
+	public abstract Session openSession() throws TransportOperationFailed, TransportDataError,
+						     TransportIOError,
+						     PtpExceptions.PtpProtocolViolation;
 
-        short  readUInt8 () throws TransportDataError;
-        int    readUInt16() throws TransportDataError;
-        long   readUInt32() throws TransportDataError;
-        long   readUInt64() throws TransportDataError;
-        byte[] readObject();
-    }
+	public abstract boolean isConnected();
+	public abstract void connect(ResponderAddress address, HostId hostId)
+		throws TransportOperationFailed, TransportDataError, TransportIOError;
 
-
-    public abstract BlockingQueue<PtpEvent> getEventQueue();
-
-    public abstract PtpDataType.DeviceInfoDataSet getDeviceInfo() throws TransportOperationFailed, TransportDataError, TransportIOError, PtpExceptions.PtpProtocolViolation;
-
-    public abstract Session openSession() throws TransportOperationFailed, TransportDataError, TransportIOError, PtpExceptions.PtpProtocolViolation;
-
-    public abstract boolean isConnected();
-    public abstract void connect(ResponderAddress address, HostId hostId) throws TransportOperationFailed, TransportDataError, TransportIOError;
-
-    public abstract boolean isClosed();
-    public abstract void close() throws TransportIOError;
+	public abstract boolean isClosed();
+	public abstract void close() throws TransportIOError;
 }

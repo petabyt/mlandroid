@@ -15,11 +15,8 @@ import fm.magiclantern.app.ptpip.PtpIpConnection;
 import fm.magiclantern.app.PtpTransport.*;
 import fm.magiclantern.app.PtpExceptions.*;
 
-public class MainActivity extends Activity
-{
-	public static class main {
-		public static WebView webview;
-	}
+public class MainActivity extends Activity {
+	public static class main { public static WebView webview; }
 
 	public static class log {
 		public static void webview(final String foo) {
@@ -27,19 +24,19 @@ public class MainActivity extends Activity
 			main.webview.post(new Runnable() {
 				@Override
 				public void run() {
-					main.webview.loadUrl("javascript:log(`" + foo + "`)"); 
+					main.webview.loadUrl("javascript:log(`" + foo + "`)");
 				}
 			});
 		}
 	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	requestWindowFeature(Window.FEATURE_NO_TITLE);
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState);
 
-        main.webview = new WebView(this);
-        WebSettings settings = main.webview.getSettings();
+		main.webview = new WebView(this);
+		WebSettings settings = main.webview.getSettings();
 		settings.setJavaScriptEnabled(true);
 
 		settings.setBuiltInZoomControls(true);
@@ -49,17 +46,17 @@ public class MainActivity extends Activity
 
 		main.webview.addJavascriptInterface(new backend(), "b");
 
-        setContentView(main.webview);
-    }
+		setContentView(main.webview);
+	}
 
 	// Access like "b.test()"
 	public class backend {
 		@JavascriptInterface
 		public void connect() {
 			String friendlyName = "MyName.name";
-			short[] guid = new short[] {
-				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-			};
+			short[] guid =
+				new short[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					      0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 			new Thread(() -> {
 				InetAddress ipAddr;
@@ -71,8 +68,10 @@ public class MainActivity extends Activity
 				}
 
 				log.webview("Initializing...");
-				PtpTransport.ResponderAddress address = new PtpIpConnection.PtpIpAddress(ipAddr);
-				PtpTransport.HostId hostId = new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
+				PtpTransport.ResponderAddress address =
+					new PtpIpConnection.PtpIpAddress(ipAddr);
+				PtpTransport.HostId hostId =
+					new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
 				PtpTransport transport = new PtpIpConnection();
 				PtpConnection connection = new PtpConnection(transport);
 
@@ -98,7 +97,8 @@ public class MainActivity extends Activity
 				}
 
 				log.webview("Getting device info...");
-				PtpDataType.DeviceInfoDataSet deviceInfo = session.getConnection().getDeviceInfo();
+				PtpDataType.DeviceInfoDataSet deviceInfo =
+					session.getConnection().getDeviceInfo();
 				log.webview("Model: " + deviceInfo.mModel);
 				log.webview("Firmware: " + deviceInfo.mDeviceVersion);
 
@@ -118,6 +118,6 @@ public class MainActivity extends Activity
 	//public native String[] arrayTest();
 
 	//static {
-    //    System.loadLibrary("hello-jni");
-    //}
+	//    System.loadLibrary("hello-jni");
+	//}
 }

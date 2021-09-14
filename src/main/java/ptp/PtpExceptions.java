@@ -19,23 +19,35 @@
 
 package fm.magiclantern.app;
 
-
 public class PtpExceptions {
-    public static class PtpError extends Exception {
-        public PtpError(String s) {super(s);}
-        public PtpError(String s, Exception e) {super(s, e);}
-    }
+	public static class PtpError extends Exception {
+		public PtpError(String s) {
+			super(s);
+		}
+		public PtpError(String s, Exception e) {
+			super(s, e);
+		}
+	}
 
-    public static class OperationFailed extends PtpError {
-        public OperationFailed(String s, int responseCode) {super("Responder failed on " + s + " (" + Integer.toHexString(responseCode) + ")!");}
-    }
+	public static class OperationFailed extends PtpError {
+		public OperationFailed(String s, int responseCode) {
+			super("Responder failed on " + s + " (" +
+			      Integer.toHexString(responseCode) + ")!");
+		}
+	}
 
-    public static class PtpProtocolViolation extends PtpError {
-        public PtpProtocolViolation(String s) {super(s);}
-        public PtpProtocolViolation(String s, Exception e) {super(s, e);}
-    }
+	public static class PtpProtocolViolation extends PtpError {
+		public PtpProtocolViolation(String s) {
+			super(s);
+		}
+		public PtpProtocolViolation(String s, Exception e) {
+			super(s, e);
+		}
+	}
 
-    public static class MalformedDataType extends PtpError {
-        public MalformedDataType(String s) {super(s);}
-    }
+	public static class MalformedDataType extends PtpError {
+		public MalformedDataType(String s) {
+			super(s);
+		}
+	}
 }
