@@ -114,10 +114,10 @@ public class MainActivity extends Activity
 		}
 	}
 
-	public native String stringFromJNI();
-	public native String[] arrayTest();
+	//public native String stringFromJNI();
+	//public native String[] arrayTest();
 
-	static {
-        System.loadLibrary("hello-jni");
-    }
+	//static {
+    //    System.loadLibrary("hello-jni");
+    //}
 }

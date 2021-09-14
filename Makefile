@@ -11,3 +11,6 @@ comp:
 
 adb:
 	adb logcat --pid=`adb shell pidof -s fm.magiclantern.app`
+
+clean:
+	rm -rf build .externalNativeBuild

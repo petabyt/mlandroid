@@ -88,10 +88,11 @@ public class TcpConnection {
     public void connect(InetSocketAddress server) throws IOException {
         try {
             mSocket = new Socket();
-            mSocket.setSoTimeout(0);
+            mSocket.setSoTimeout(1000);
             mSocket.setKeepAlive(true);
             mSocket.setTcpNoDelay(true);
-            mSocket.connect(server);
+            mSocket.setReuseAddress(true);
+            mSocket.connect(server, 2500);
             mOut = mSocket.getOutputStream();
             mIn = mSocket.getInputStream();
             mLastActivityTimestamp = System.currentTimeMillis();
