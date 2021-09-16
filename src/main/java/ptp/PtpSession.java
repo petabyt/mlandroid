@@ -244,46 +244,21 @@ public class PtpSession {
 								response.getResponseCode());
 	}
 
-	public void eventProcedure()
+	public void eventProcedure(String command)
 		throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation,
 		       PtpExceptions.OperationFailed {
+
 		// 0x9052 execute event proc
 		PtpOperation.Request request = PtpOperation.createRequest(PtpOperation.OPSCODE_RunEventProc);
-		
-		// No parameters
-		//request.mParameters = null;
-		
-		// Copy the string in with generous padding
-		// byte[] string;
-		// 
-		// try {
-			// string = "DisableBootDisk".getBytes("ascii");
-		// } catch (Exception e) {
-			// e.printStackTrace();
-			// return;
-		// }
-		// 
-		// byte[] payloadBytes = new byte[100];
-		// for (int i = 0; i < 100; i++) {
-			// payloadBytes[i] = 0;
-		// }
-		// 
-		// for (int i = 0; i < string.length; i++) {
-			// payloadBytes[i] = string[i];
-		// }
-		
-		// Create the bulk payload
-		//DataBuffer payload = new DataBuffer();
-		//payload.writeObject(payloadBytes);
-		request.mData = new PtpDataType.PtpString("DisableBootDisk", false);
-		//request.mData.writeToBuffer(payload);
+
+		request.mData = new PtpDataType.PtpString(command, false);
 		
 		PtpOperation.Response response = mSession.executeTransaction(request);
 		response.validate();
 
 		if (!response.isSuccess())
 			throw new PtpExceptions.OperationFailed("RunEventProc",
-								response.getResponseCode());
+				response.getResponseCode());
 	}
 
 	/*      public void deleteObject() {}

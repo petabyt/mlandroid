@@ -90,10 +90,12 @@ public class PtpIpSession implements PtpTransport.Session {
                 DataBuffer dataBuffer = new DataBuffer();
                 request.getData().writeToBuffer(dataBuffer);
                 mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.StartData(transactionId, dataBuffer.size()));
-                if (dataBuffer.size() > 0)
-                    mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.Data(transactionId, dataBuffer));
-                // WILL crash    
-                //mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.EndData(transactionId, null));
+                mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.Data(transactionId, dataBuffer));
+
+                // For the end packet, we will send an empty
+                // data buffer. See https://www.cipa.jp/std/documents/e/DC-X005.pdf page 21
+                DataBuffer dataBufferEmpty = new DataBuffer();
+                mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.EndData(transactionId, dataBufferEmpty));
             }
         }
         catch (IOException e) {throw new PtpIpExceptions.IOError(e);}

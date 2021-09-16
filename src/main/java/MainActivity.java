@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
 
 				log.webview("Running event proc...");
 				try {
-						session.eventProcedure();
+					session.eventProcedure("EnableBootDisk");
 				} catch (Exception e) {
 					log.webview("Failed to run event proc.");
 					e.printStackTrace();

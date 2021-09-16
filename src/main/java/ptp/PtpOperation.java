@@ -476,10 +476,10 @@ public class PtpOperation {
 				throw new PtpExceptions.PtpProtocolViolation(
 					"Invalid response code (OpsCode: " + mOperationCode +
 					", Rspcode: " + mRspCode + ")");
-			if ((mParameters == null) ||
-			    (mParameters.length != mNumberResponseParameters))
-				throw new PtpExceptions.PtpProtocolViolation(
-					"Invalid number of response parameters received!");
+			//if ((mParameters == null) ||
+			//    (mParameters.length != mNumberResponseParameters))
+			//	throw new PtpExceptions.PtpProtocolViolation(
+			//		"Invalid number of response parameters received!");
 			if ((mDataFlow != DataFlow.DATA_IN) && (mDataBuffer != null))
 				throw new PtpExceptions.PtpProtocolViolation(
 					"Received data, didn't expect any!");
