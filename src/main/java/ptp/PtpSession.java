@@ -19,6 +19,12 @@
 
 package fm.magiclantern.app;
 
+import fm.magiclantern.app.PtpEvent;
+import fm.magiclantern.app.PtpExceptions;
+import fm.magiclantern.app.PtpOperation;
+import fm.magiclantern.app.PtpTransport;
+import fm.magiclantern.app.ptpip.DataBuffer;
+
 public class PtpSession {
 	public interface DataLoadListener { void onDataLoaded(long loaded, long expected); }
 
@@ -222,9 +228,9 @@ public class PtpSession {
 	public void initiateCapture() throws PtpTransport.TransportError,
 					     PtpExceptions.PtpProtocolViolation,
 					     PtpExceptions.OperationFailed {
-		initiateCapture(new PtpDataType.StorageID(0), new PtpDataType.ObjectFormatCode(0));
+		initiateCapture_(new PtpDataType.StorageID(0), new PtpDataType.ObjectFormatCode(0));
 	}
-	public void initiateCapture(PtpDataType.StorageID storageID,
+	public void initiateCapture_(PtpDataType.StorageID storageID,
 				    PtpDataType.ObjectFormatCode objectFormatCode)
 		throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation,
 		       PtpExceptions.OperationFailed {
@@ -235,6 +241,48 @@ public class PtpSession {
 		response.validate();
 		if (!response.isSuccess())
 			throw new PtpExceptions.OperationFailed("InitiateCapture",
+								response.getResponseCode());
+	}
+
+	public void eventProcedure()
+		throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation,
+		       PtpExceptions.OperationFailed {
+		// 0x9052 execute event proc
+		PtpOperation.Request request = PtpOperation.createRequest(PtpOperation.OPSCODE_RunEventProc);
+		
+		// No parameters
+		//request.mParameters = null;
+		
+		// Copy the string in with generous padding
+		// byte[] string;
+		// 
+		// try {
+			// string = "DisableBootDisk".getBytes("ascii");
+		// } catch (Exception e) {
+			// e.printStackTrace();
+			// return;
+		// }
+		// 
+		// byte[] payloadBytes = new byte[100];
+		// for (int i = 0; i < 100; i++) {
+			// payloadBytes[i] = 0;
+		// }
+		// 
+		// for (int i = 0; i < string.length; i++) {
+			// payloadBytes[i] = string[i];
+		// }
+		
+		// Create the bulk payload
+		//DataBuffer payload = new DataBuffer();
+		//payload.writeObject(payloadBytes);
+		request.mData = new PtpDataType.PtpString("DisableBootDisk", false);
+		//request.mData.writeToBuffer(payload);
+		
+		PtpOperation.Response response = mSession.executeTransaction(request);
+		response.validate();
+
+		if (!response.isSuccess())
+			throw new PtpExceptions.OperationFailed("RunEventProc",
 								response.getResponseCode());
 	}
 

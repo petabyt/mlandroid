@@ -92,7 +92,8 @@ public class PtpIpSession implements PtpTransport.Session {
                 mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.StartData(transactionId, dataBuffer.size()));
                 if (dataBuffer.size() > 0)
                     mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.Data(transactionId, dataBuffer));
-                mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.EndData(transactionId, null));
+                // WILL crash    
+                //mPtpIpConnection.sendCommandChannelPacket(new PtpIpPacket.EndData(transactionId, null));
             }
         }
         catch (IOException e) {throw new PtpIpExceptions.IOError(e);}

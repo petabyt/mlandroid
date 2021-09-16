@@ -107,6 +107,13 @@ public class TcpConnection {
     public void sendPacket(PtpIpPacket packet) throws IOException {
         LOG.info("PTPIP: Packet out ==> " + packet.toString());
         if ((mSocket == null) || (mSocket.isClosed()) || (!mSocket.isConnected())) throw new IOException();
+
+		byte[] a = packet.serializePacket();
+		for (int i = 0; i < a.length; i++) {
+			System.out.print(a[i]);
+			System.out.print(" ");
+		}
+		
         mOut.write(packet.serializePacket());
         mOut.flush();
         mLastActivityTimestamp = System.currentTimeMillis();

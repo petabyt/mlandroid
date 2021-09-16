@@ -68,10 +68,8 @@ public class MainActivity extends Activity {
 				}
 
 				log.webview("Initializing...");
-				PtpTransport.ResponderAddress address =
-					new PtpIpConnection.PtpIpAddress(ipAddr);
-				PtpTransport.HostId hostId =
-					new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
+				PtpTransport.ResponderAddress address = new PtpIpConnection.PtpIpAddress(ipAddr);
+				PtpTransport.HostId hostId = new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
 				PtpTransport transport = new PtpIpConnection();
 				PtpConnection connection = new PtpConnection(transport);
 
@@ -95,12 +93,21 @@ public class MainActivity extends Activity {
 					log.webview("Couldn't open session");
 					return;
 				}
-
+	
 				log.webview("Getting device info...");
 				PtpDataType.DeviceInfoDataSet deviceInfo =
 					session.getConnection().getDeviceInfo();
 				log.webview("Model: " + deviceInfo.mModel);
 				log.webview("Firmware: " + deviceInfo.mDeviceVersion);
+
+				log.webview("Running event proc...");
+				try {
+						session.eventProcedure();
+				} catch (Exception e) {
+					log.webview("Failed to run event proc.");
+					e.printStackTrace();
+					return;
+				}
 
 				log.webview("Closing session...");
 				try {

@@ -114,6 +114,7 @@ public abstract class PtpDataType {
 
 	public static class PtpString extends PtpDataType implements Serializable {
 		public String mString = "";
+		public boolean isWchar = true;
 
 		@Override
 		protected void write(PtpTransport.PayloadBuffer out) {
@@ -122,10 +123,22 @@ public abstract class PtpDataType {
 				return;
 			}
 
-			out.writeUInt8((short)(mString.length() + 1));
-			for (int i = 0; i < mString.length(); i++)
-				out.writeUInt16((short)mString.charAt(i));
-			out.writeUInt16(0);
+			if (isWchar) {
+				out.writeUInt8((short)(mString.length() + 1));
+				for (int i = 0; i < mString.length(); i++) {
+					out.writeUInt16((short)mString.charAt(i));
+				}
+
+				out.writeUInt16(0);
+			} else {
+				for (int i = 0; i < mString.length(); i++) {
+					out.writeUInt8((short)mString.charAt(i));
+				}
+
+				for (int i = 0; i < 5; i++) {
+					out.writeUInt8((byte)0);
+				}
+			}
 		}
 		@Override
 		protected void read(PtpTransport.PayloadBuffer in)
@@ -155,7 +168,8 @@ public abstract class PtpDataType {
 
 		public PtpString() {
 		}
-		public PtpString(String s) {
+		public PtpString(String s, boolean _isWchar) {
+			isWchar = _isWchar;
 			if (s.length() > 254)
 				s = s.substring(0, 254);
 			mString = s;

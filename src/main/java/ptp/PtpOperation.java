@@ -33,7 +33,7 @@ public class PtpOperation {
 	// ---------------------------------------------------------------------------------------------
 	// Operation codes
 
-	public final static Map<Integer, String> OPSCODE_DESCRIPTIONS = new HashMap<>(29);
+	public final static Map<Integer, String> OPSCODE_DESCRIPTIONS = new HashMap<>(30);
 
 	public final static int OPSCODE_Undefined = 0x1000;
 	static {
@@ -150,6 +150,10 @@ public class PtpOperation {
 	public final static int OPSCODE_InitiateOpenCapture = 0x101c;
 	static {
 		OPSCODE_DESCRIPTIONS.put(OPSCODE_InitiateOpenCapture, "InitiateOpenCapture");
+	}
+	public final static int OPSCODE_RunEventProc = 0x9052;
+	static {
+		OPSCODE_DESCRIPTIONS.put(OPSCODE_RunEventProc, "RunEventProc");
 	}
 
 	public final static Map<Integer, String> RSPCODE_DESCRIPTIONS = new HashMap<>(33);
@@ -298,25 +302,34 @@ public class PtpOperation {
 		new PtpOperation(OPSCODE_GetDeviceInfo, 0, 0, 0, DataFlow.DATA_IN,
 				 PtpDataType.DeviceInfoDataSet.class,
 				 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported }),
+
+		new PtpOperation(OPSCODE_RunEventProc, 0, 0, 0, DataFlow.DATA_OUT,
+						 PtpDataType.PtpString.class,
+				 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported, RSPCODE_InvalidTransactionID }),
+
 		new PtpOperation(OPSCODE_OpenSession, 1, 1, 0,
 				 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported,
 					     RSPCODE_InvalidParameter, RSPCODE_SessionAlreadyOpen,
 					     RSPCODE_DeviceBusy }),
+
 		new PtpOperation(OPSCODE_CloseSession, 0, 0, 0,
 				 new int[] { RSPCODE_OK, RSPCODE_SessionNotOpen,
 					     RSPCODE_InvalidTransactionID,
 					     RSPCODE_ParameterNotSupported }),
+
 		new PtpOperation(OPSCODE_GetStorageIDs, 0, 0, 0, DataFlow.DATA_IN,
 				 PtpDataType.StorageIdArray.class,
 				 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
 					     RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
 					     RSPCODE_ParameterNotSupported }),
+
 		new PtpOperation(OPSCODE_GetStorageInfo, 1, 1, 0, DataFlow.DATA_IN,
 				 PtpDataType.StorageInfoDataSet.class,
 				 new int[] { RSPCODE_OK, RSPCODE_SessionNotOpen,
 					     RSPCODE_InvalidTransactionID, RSPCODE_AccessDenied,
 					     RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
 					     RSPCODE_ParameterNotSupported }),
+
 		new PtpOperation(
 			OPSCODE_GetNumObjects, 1, 3, 1,
 			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
@@ -326,6 +339,7 @@ public class PtpOperation {
 				    RSPCODE_InvalidCodeFormat, RSPCODE_ParameterNotSupported,
 				    RSPCODE_InvalidParentObject, RSPCODE_InvalidObjectHandle,
 				    RSPCODE_InvalidParameter }),
+
 		new PtpOperation(
 			OPSCODE_GetObjectHandles, 1, 3, 0, DataFlow.DATA_IN,
 			PtpDataType.ObjectHandleArray.class,
@@ -337,12 +351,14 @@ public class PtpOperation {
 				    RSPCODE_InvalidCodeFormat, RSPCODE_InvalidObjectHandle,
 				    RSPCODE_InvalidParameter, RSPCODE_ParameterNotSupported,
 				    RSPCODE_InvalidParentObject, RSPCODE_InvalidObjectHandle }),
+
 		new PtpOperation(OPSCODE_GetObjectInfo, 1, 1, 0, DataFlow.DATA_IN,
 				 PtpDataType.ObjectInfoDataSet.class,
 				 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
 					     RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
 					     RSPCODE_InvalidObjectHandle, RSPCODE_StoreNotAvailable,
 					     RSPCODE_ParameterNotSupported }),
+
 		new PtpOperation(
 			OPSCODE_GetObject, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.Object.class,
 			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
@@ -350,6 +366,7 @@ public class PtpOperation {
 				    RSPCODE_InvalidObjectHandle, RSPCODE_InvalidParameter,
 				    RSPCODE_StoreNotAvailable, RSPCODE_ParameterNotSupported,
 				    RSPCODE_IncompleteTransfer }),
+
 		new PtpOperation(
 			OPSCODE_GetThumb, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.Object.class,
 			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
@@ -357,6 +374,7 @@ public class PtpOperation {
 				    RSPCODE_InvalidObjectHandle, RSPCODE_NoThumbnailPresent,
 				    RSPCODE_InvalidObjectFormatCode, RSPCODE_StoreNotAvailable,
 				    RSPCODE_ParameterNotSupported }),
+
 		new PtpOperation(OPSCODE_InitiateCapture, 2, 2, 0,
 				 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
 					     RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
