@@ -204,8 +204,7 @@ public class PtpOperation {
 	}
 	public static final int RSPCODE_InvalidObjectFormatCode = 0x200B;
 	static {
-		RSPCODE_DESCRIPTIONS.put(RSPCODE_InvalidObjectFormatCode,
-					 "InvalidObjectFormatCode");
+		RSPCODE_DESCRIPTIONS.put(RSPCODE_InvalidObjectFormatCode, "InvalidObjectFormatCode");
 	}
 	public static final int RSPCODE_StoreFull = 0x200C;
 	static {
@@ -242,7 +241,7 @@ public class PtpOperation {
 	public static final int RSPCODE_SpecificationByFormatUnsupported = 0x2014;
 	static {
 		RSPCODE_DESCRIPTIONS.put(RSPCODE_SpecificationByFormatUnsupported,
-					 "SpecificationByFormatUnsupported");
+								 "SpecificationByFormatUnsupported");
 	}
 	public static final int RSPCODE_NoValidObjectInfo = 0x2015;
 	static {
@@ -258,8 +257,7 @@ public class PtpOperation {
 	}
 	public static final int RSPCODE_CaptureAlreadyTerminated = 0x2018;
 	static {
-		RSPCODE_DESCRIPTIONS.put(RSPCODE_CaptureAlreadyTerminated,
-					 "CaptureAlreadyTerminated");
+		RSPCODE_DESCRIPTIONS.put(RSPCODE_CaptureAlreadyTerminated, "CaptureAlreadyTerminated");
 	}
 	public static final int RSPCODE_DeviceBusy = 0x2019;
 	static {
@@ -271,8 +269,7 @@ public class PtpOperation {
 	}
 	public static final int RSPCODE_InvalidDevicePropFormat = 0x201B;
 	static {
-		RSPCODE_DESCRIPTIONS.put(RSPCODE_InvalidDevicePropFormat,
-					 "InvalidDevicePropFormat");
+		RSPCODE_DESCRIPTIONS.put(RSPCODE_InvalidDevicePropFormat, "InvalidDevicePropFormat");
 	}
 	public static final int RSPCODE_InvalidDevicePropValue = 0x201C;
 	static {
@@ -300,89 +297,80 @@ public class PtpOperation {
 
 	private static final PtpOperation[] PTP_OPERATIONS = {
 		new PtpOperation(OPSCODE_GetDeviceInfo, 0, 0, 0, DataFlow.DATA_IN,
-				 PtpDataType.DeviceInfoDataSet.class,
-				 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported }),
+						 PtpDataType.DeviceInfoDataSet.class,
+						 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported }),
 
-		new PtpOperation(OPSCODE_RunEventProc, 0, 0, 0, DataFlow.DATA_OUT,
-						 PtpDataType.PtpString.class,
-				 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported, RSPCODE_InvalidTransactionID }),
+		new PtpOperation(
+			OPSCODE_RunEventProc, 0, 0, 0, DataFlow.DATA_OUT, PtpDataType.PtpString.class,
+			new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported, RSPCODE_InvalidTransactionID }),
 
 		new PtpOperation(OPSCODE_OpenSession, 1, 1, 0,
-				 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported,
-					     RSPCODE_InvalidParameter, RSPCODE_SessionAlreadyOpen,
-					     RSPCODE_DeviceBusy }),
+						 new int[] { RSPCODE_OK, RSPCODE_ParameterNotSupported,
+									 RSPCODE_InvalidParameter, RSPCODE_SessionAlreadyOpen,
+									 RSPCODE_DeviceBusy }),
 
 		new PtpOperation(OPSCODE_CloseSession, 0, 0, 0,
-				 new int[] { RSPCODE_OK, RSPCODE_SessionNotOpen,
-					     RSPCODE_InvalidTransactionID,
-					     RSPCODE_ParameterNotSupported }),
-
-		new PtpOperation(OPSCODE_GetStorageIDs, 0, 0, 0, DataFlow.DATA_IN,
-				 PtpDataType.StorageIdArray.class,
-				 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-					     RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-					     RSPCODE_ParameterNotSupported }),
-
-		new PtpOperation(OPSCODE_GetStorageInfo, 1, 1, 0, DataFlow.DATA_IN,
-				 PtpDataType.StorageInfoDataSet.class,
-				 new int[] { RSPCODE_OK, RSPCODE_SessionNotOpen,
-					     RSPCODE_InvalidTransactionID, RSPCODE_AccessDenied,
-					     RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
-					     RSPCODE_ParameterNotSupported }),
+						 new int[] { RSPCODE_OK, RSPCODE_SessionNotOpen,
+									 RSPCODE_InvalidTransactionID, RSPCODE_ParameterNotSupported }),
 
 		new PtpOperation(
-			OPSCODE_GetNumObjects, 1, 3, 1,
-			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-				    RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-				    RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
-				    RSPCODE_SpecificationByFormatUnsupported,
-				    RSPCODE_InvalidCodeFormat, RSPCODE_ParameterNotSupported,
-				    RSPCODE_InvalidParentObject, RSPCODE_InvalidObjectHandle,
-				    RSPCODE_InvalidParameter }),
+			OPSCODE_GetStorageIDs, 0, 0, 0, DataFlow.DATA_IN, PtpDataType.StorageIdArray.class,
+			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported, RSPCODE_SessionNotOpen,
+						RSPCODE_InvalidTransactionID, RSPCODE_ParameterNotSupported }),
 
 		new PtpOperation(
-			OPSCODE_GetObjectHandles, 1, 3, 0, DataFlow.DATA_IN,
-			PtpDataType.ObjectHandleArray.class,
-			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-				    RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-				    RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
-				    RSPCODE_InvalidObjectFormatCode,
-				    RSPCODE_SpecificationByFormatUnsupported,
-				    RSPCODE_InvalidCodeFormat, RSPCODE_InvalidObjectHandle,
-				    RSPCODE_InvalidParameter, RSPCODE_ParameterNotSupported,
-				    RSPCODE_InvalidParentObject, RSPCODE_InvalidObjectHandle }),
+			OPSCODE_GetStorageInfo, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.StorageInfoDataSet.class,
+			new int[] { RSPCODE_OK, RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
+						RSPCODE_AccessDenied, RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
+						RSPCODE_ParameterNotSupported }),
 
-		new PtpOperation(OPSCODE_GetObjectInfo, 1, 1, 0, DataFlow.DATA_IN,
-				 PtpDataType.ObjectInfoDataSet.class,
-				 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-					     RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-					     RSPCODE_InvalidObjectHandle, RSPCODE_StoreNotAvailable,
-					     RSPCODE_ParameterNotSupported }),
+		new PtpOperation(OPSCODE_GetNumObjects, 1, 3, 1,
+						 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
+									 RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
+									 RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
+									 RSPCODE_SpecificationByFormatUnsupported,
+									 RSPCODE_InvalidCodeFormat, RSPCODE_ParameterNotSupported,
+									 RSPCODE_InvalidParentObject, RSPCODE_InvalidObjectHandle,
+									 RSPCODE_InvalidParameter }),
+
+		new PtpOperation(OPSCODE_GetObjectHandles, 1, 3, 0, DataFlow.DATA_IN,
+						 PtpDataType.ObjectHandleArray.class,
+						 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
+									 RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
+									 RSPCODE_InvalidStorageID, RSPCODE_StoreNotAvailable,
+									 RSPCODE_InvalidObjectFormatCode,
+									 RSPCODE_SpecificationByFormatUnsupported,
+									 RSPCODE_InvalidCodeFormat, RSPCODE_InvalidObjectHandle,
+									 RSPCODE_InvalidParameter, RSPCODE_ParameterNotSupported,
+									 RSPCODE_InvalidParentObject, RSPCODE_InvalidObjectHandle }),
 
 		new PtpOperation(
-			OPSCODE_GetObject, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.Object.class,
-			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-				    RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-				    RSPCODE_InvalidObjectHandle, RSPCODE_InvalidParameter,
-				    RSPCODE_StoreNotAvailable, RSPCODE_ParameterNotSupported,
-				    RSPCODE_IncompleteTransfer }),
+			OPSCODE_GetObjectInfo, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.ObjectInfoDataSet.class,
+			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported, RSPCODE_SessionNotOpen,
+						RSPCODE_InvalidTransactionID, RSPCODE_InvalidObjectHandle,
+						RSPCODE_StoreNotAvailable, RSPCODE_ParameterNotSupported }),
 
-		new PtpOperation(
-			OPSCODE_GetThumb, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.Object.class,
-			new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-				    RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-				    RSPCODE_InvalidObjectHandle, RSPCODE_NoThumbnailPresent,
-				    RSPCODE_InvalidObjectFormatCode, RSPCODE_StoreNotAvailable,
-				    RSPCODE_ParameterNotSupported }),
+		new PtpOperation(OPSCODE_GetObject, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.Object.class,
+						 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
+									 RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
+									 RSPCODE_InvalidObjectHandle, RSPCODE_InvalidParameter,
+									 RSPCODE_StoreNotAvailable, RSPCODE_ParameterNotSupported,
+									 RSPCODE_IncompleteTransfer }),
+
+		new PtpOperation(OPSCODE_GetThumb, 1, 1, 0, DataFlow.DATA_IN, PtpDataType.Object.class,
+						 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
+									 RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
+									 RSPCODE_InvalidObjectHandle, RSPCODE_NoThumbnailPresent,
+									 RSPCODE_InvalidObjectFormatCode, RSPCODE_StoreNotAvailable,
+									 RSPCODE_ParameterNotSupported }),
 
 		new PtpOperation(OPSCODE_InitiateCapture, 2, 2, 0,
-				 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
-					     RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
-					     RSPCODE_InvalidStorageID, RSPCODE_StoreFull,
-					     RSPCODE_InvalidObjectFormatCode,
-					     RSPCODE_InvalidParameter, RSPCODE_StoreNotAvailable,
-					     RSPCODE_InvalidCodeFormat, RSPCODE_DeviceBusy,
-					     RSPCODE_ParameterNotSupported })
+						 new int[] { RSPCODE_OK, RSPCODE_OperationNotSupported,
+									 RSPCODE_SessionNotOpen, RSPCODE_InvalidTransactionID,
+									 RSPCODE_InvalidStorageID, RSPCODE_StoreFull,
+									 RSPCODE_InvalidObjectFormatCode, RSPCODE_InvalidParameter,
+									 RSPCODE_StoreNotAvailable, RSPCODE_InvalidCodeFormat,
+									 RSPCODE_DeviceBusy, RSPCODE_ParameterNotSupported })
 	};
 
 	// ---------------------------------------------------------------------------------------------
@@ -419,9 +407,8 @@ public class PtpOperation {
 		}
 
 		public void validate() throws PtpExceptions.PtpProtocolViolation {
-			if ((mParameters == null) ||
-			    (mParameters.length > mMaxNumberRequestParameters) ||
-			    (mParameters.length < mMinNumberRequestParameters))
+			if ((mParameters == null) || (mParameters.length > mMaxNumberRequestParameters) ||
+				(mParameters.length < mMinNumberRequestParameters))
 				throw new PtpExceptions.PtpProtocolViolation(
 					"Invalid number of request parameters given!");
 			if ((mDataFlow != DataFlow.DATA_OUT) && (mData != null))
@@ -437,8 +424,7 @@ public class PtpOperation {
 
 		public String toString() {
 			return "[OpsReq][OpsCode: " + mOperationCode +
-				", Parameters: " + arrayToString(mParameters) + ", Data: " + mData +
-				"]";
+				", Parameters: " + arrayToString(mParameters) + ", Data: " + mData + "]";
 		}
 	}
 
@@ -474,15 +460,14 @@ public class PtpOperation {
 		public void validate() throws PtpExceptions.PtpProtocolViolation {
 			if (!intArrayContains(mAllowedRspCodes, mRspCode.mValue))
 				throw new PtpExceptions.PtpProtocolViolation(
-					"Invalid response code (OpsCode: " + mOperationCode +
-					", Rspcode: " + mRspCode + ")");
+					"Invalid response code (OpsCode: " + mOperationCode + ", Rspcode: " + mRspCode +
+					")");
 			//if ((mParameters == null) ||
 			//    (mParameters.length != mNumberResponseParameters))
 			//	throw new PtpExceptions.PtpProtocolViolation(
 			//		"Invalid number of response parameters received!");
 			if ((mDataFlow != DataFlow.DATA_IN) && (mDataBuffer != null))
-				throw new PtpExceptions.PtpProtocolViolation(
-					"Received data, didn't expect any!");
+				throw new PtpExceptions.PtpProtocolViolation("Received data, didn't expect any!");
 			if (mDataFlow == DataFlow.DATA_IN) {
 				if (mDataBuffer == null)
 					throw new PtpExceptions.PtpProtocolViolation(
@@ -497,8 +482,7 @@ public class PtpOperation {
 					mData.read(mDataBuffer);
 					mDataBuffer = null;
 				} catch (Exception e) {
-					throw new PtpExceptions.PtpProtocolViolation(
-						"Error parsing response data!", e);
+					throw new PtpExceptions.PtpProtocolViolation("Error parsing response data!", e);
 				}
 			}
 			if (mData != null)
@@ -506,9 +490,8 @@ public class PtpOperation {
 		}
 
 		public String toString() {
-			return "[OpsRsp][RpsCode: " + mRspCode +
-				", Parameters: " + arrayToString(mParameters) + ", Data: " + mData +
-				"]";
+			return "[OpsRsp][RpsCode: " + mRspCode + ", Parameters: " + arrayToString(mParameters) +
+				", Data: " + mData + "]";
 		}
 	}
 
@@ -516,15 +499,15 @@ public class PtpOperation {
 	// Constructors
 
 	private PtpOperation(int operationCode, int minNumberRequestParameters,
-			     int maxNumberRequestParameters, int numberResponseParameters,
-			     int[] allowedRspCodes) {
+						 int maxNumberRequestParameters, int numberResponseParameters,
+						 int[] allowedRspCodes) {
 		this(operationCode, minNumberRequestParameters, maxNumberRequestParameters,
-		     numberResponseParameters, DataFlow.NONE, null, allowedRspCodes);
+			 numberResponseParameters, DataFlow.NONE, null, allowedRspCodes);
 	}
 	private PtpOperation(int operationCode, int minNumberRequestParameters,
-			     int maxNumberRequestParameters, int numberResponseParameters,
-			     DataFlow dataFlow, Class<? extends PtpDataType> dataType,
-			     int[] allowedRspCodes) {
+						 int maxNumberRequestParameters, int numberResponseParameters,
+						 DataFlow dataFlow, Class<? extends PtpDataType> dataType,
+						 int[] allowedRspCodes) {
 		mOperationCode = new PtpDataType.OperationCode(operationCode);
 		mMinNumberRequestParameters = minNumberRequestParameters;
 		mMinNumberRequestParameters = maxNumberRequestParameters;

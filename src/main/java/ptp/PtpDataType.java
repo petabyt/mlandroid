@@ -49,8 +49,7 @@ public abstract class PtpDataType {
 			out.writeUInt16(mValue);
 		}
 		@Override
-		protected void read(PtpTransport.PayloadBuffer in)
-			throws PtpTransport.TransportDataError {
+		protected void read(PtpTransport.PayloadBuffer in) throws PtpTransport.TransportDataError {
 			mValue = in.readUInt16();
 		}
 		@Override
@@ -72,8 +71,7 @@ public abstract class PtpDataType {
 			out.writeUInt32(mValue);
 		}
 		@Override
-		protected void read(PtpTransport.PayloadBuffer in)
-			throws PtpTransport.TransportDataError {
+		protected void read(PtpTransport.PayloadBuffer in) throws PtpTransport.TransportDataError {
 			mValue = in.readUInt32();
 		}
 		@Override
@@ -95,8 +93,7 @@ public abstract class PtpDataType {
 			out.writeUInt64(mValue);
 		}
 		@Override
-		protected void read(PtpTransport.PayloadBuffer in)
-			throws PtpTransport.TransportDataError {
+		protected void read(PtpTransport.PayloadBuffer in) throws PtpTransport.TransportDataError {
 			mValue = in.readUInt64();
 		}
 		@Override
@@ -221,8 +218,7 @@ public abstract class PtpDataType {
 
 	public static class OperationCode extends Datacode implements Serializable {
 		public String toString() {
-			return super.toString() + " (" +
-				PtpOperation.OPSCODE_DESCRIPTIONS.get(mValue) + ")";
+			return super.toString() + " (" + PtpOperation.OPSCODE_DESCRIPTIONS.get(mValue) + ")";
 		}
 		public OperationCode(int value) {
 			mValue = value;
@@ -232,8 +228,7 @@ public abstract class PtpDataType {
 	}
 	public static class ResponseCode extends Datacode implements Serializable {
 		public String toString() {
-			return super.toString() + " (" +
-				PtpOperation.RSPCODE_DESCRIPTIONS.get(mValue) + ")";
+			return super.toString() + " (" + PtpOperation.RSPCODE_DESCRIPTIONS.get(mValue) + ")";
 		}
 		public ResponseCode(int value) {
 			mValue = value;
@@ -243,8 +238,7 @@ public abstract class PtpDataType {
 	}
 	public static class EventCode extends Datacode implements Serializable {
 		public String toString() {
-			return super.toString() + " (" +
-				PtpEvent.EVENTCODE_DESCRIPTIONS.get(mValue) + ")";
+			return super.toString() + " (" + PtpEvent.EVENTCODE_DESCRIPTIONS.get(mValue) + ")";
 		}
 		public EventCode(int value) {
 			mValue = value;
@@ -311,9 +305,7 @@ public abstract class PtpDataType {
 
 		@Override
 		protected void write(PtpTransport.PayloadBuffer out) {
-			mString = mDate != null ?
-					  new SimpleDateFormat("yyyyMMdd'T'HHmmssZ").format(mDate) :
-					  "";
+			mString = mDate != null ? new SimpleDateFormat("yyyyMMdd'T'HHmmssZ").format(mDate) : "";
 			super.write(out);
 		}
 		@Override
@@ -324,20 +316,20 @@ public abstract class PtpDataType {
 				mDate = null;
 				return;
 			}
-			mDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss.SZ")
-					.parse(mString, new ParsePosition(0));
+			mDate =
+				new SimpleDateFormat("yyyyMMdd'T'HHmmss.SZ").parse(mString, new ParsePosition(0));
 			if (mDate == null)
-				mDate = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ")
-						.parse(mString, new ParsePosition(0));
+				mDate =
+					new SimpleDateFormat("yyyyMMdd'T'HHmmssZ").parse(mString, new ParsePosition(0));
 			if (mDate == null)
-				mDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss.S")
-						.parse(mString, new ParsePosition(0));
+				mDate =
+					new SimpleDateFormat("yyyyMMdd'T'HHmmss.S").parse(mString, new ParsePosition(0));
 			if (mDate == null)
-				mDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss")
-						.parse(mString, new ParsePosition(0));
+				mDate =
+					new SimpleDateFormat("yyyyMMdd'T'HHmmss").parse(mString, new ParsePosition(0));
 			if (mDate == null)
-				throw new PtpExceptions.MalformedDataType(
-					"Cannot parse Date string (\"" + mString + "\")");
+				throw new PtpExceptions.MalformedDataType("Cannot parse Date string (\"" + mString +
+														  "\")");
 		}
 		@Override
 		public String toString() {
@@ -350,8 +342,7 @@ public abstract class PtpDataType {
 			super(StorageID.class);
 		}
 	}
-	public static class ObjectHandleArray
-		extends ArrayType<ObjectHandle> implements Serializable {
+	public static class ObjectHandleArray extends ArrayType<ObjectHandle> implements Serializable {
 		public ObjectHandleArray() {
 			super(ObjectHandle.class);
 		}
@@ -363,15 +354,13 @@ public abstract class PtpDataType {
 		public UInt16 mVendorExtensionVersion = new UInt16();
 		public PtpString mVendorExtensionDesc = new PtpString();
 		public UInt16 mFunctionalMode = new UInt16();
-		public ArrayType<OperationCode> mOperationsSupported =
-			new ArrayType<>(OperationCode.class);
+		public ArrayType<OperationCode> mOperationsSupported = new ArrayType<>(OperationCode.class);
 		public ArrayType<EventCode> mEventsSupported = new ArrayType<>(EventCode.class);
 		public ArrayType<DevicePropCode> mDevicePropertiesSupported =
 			new ArrayType<>(DevicePropCode.class);
 		public ArrayType<ObjectFormatCode> mCaptureFormats =
 			new ArrayType<>(ObjectFormatCode.class);
-		public ArrayType<ObjectFormatCode> mImageFormats =
-			new ArrayType<>(ObjectFormatCode.class);
+		public ArrayType<ObjectFormatCode> mImageFormats = new ArrayType<>(ObjectFormatCode.class);
 		public PtpString mManufacturer = new PtpString();
 		public PtpString mModel = new PtpString();
 		public PtpString mDeviceVersion = new PtpString();
@@ -425,8 +414,7 @@ public abstract class PtpDataType {
 				+ "    [FunctionalMode: " + mFunctionalMode + "]\n"
 				+ "    [OperationsSupported: " + mOperationsSupported + "]\n"
 				+ "    [EventsSupported: " + mEventsSupported + "]\n"
-				+ "    [DevicePropertiesSupported: " + mDevicePropertiesSupported +
-				"]\n"
+				+ "    [DevicePropertiesSupported: " + mDevicePropertiesSupported + "]\n"
 				+ "    [CaptureFormats: " + mCaptureFormats + "]\n"
 				+ "    [ImageFormats: " + mImageFormats + "]\n"
 				+ "    [Manufacturer: " + mManufacturer + "]\n"

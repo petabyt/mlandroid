@@ -54,9 +54,8 @@ public class MainActivity extends Activity {
 		@JavascriptInterface
 		public void connect() {
 			String friendlyName = "MyName.name";
-			short[] guid =
-				new short[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-					      0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+			short[] guid = new short[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+										 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 			new Thread(() -> {
 				InetAddress ipAddr;
@@ -69,7 +68,8 @@ public class MainActivity extends Activity {
 
 				log.webview("Initializing...");
 				PtpTransport.ResponderAddress address = new PtpIpConnection.PtpIpAddress(ipAddr);
-				PtpTransport.HostId hostId = new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
+				PtpTransport.HostId hostId =
+					new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
 				PtpTransport transport = new PtpIpConnection();
 				PtpConnection connection = new PtpConnection(transport);
 
@@ -93,10 +93,9 @@ public class MainActivity extends Activity {
 					log.webview("Couldn't open session");
 					return;
 				}
-	
+
 				log.webview("Getting device info...");
-				PtpDataType.DeviceInfoDataSet deviceInfo =
-					session.getConnection().getDeviceInfo();
+				PtpDataType.DeviceInfoDataSet deviceInfo = session.getConnection().getDeviceInfo();
 				log.webview("Model: " + deviceInfo.mModel);
 				log.webview("Firmware: " + deviceInfo.mDeviceVersion);
 

@@ -66,10 +66,10 @@ public abstract class PtpTransport {
 		PtpOperation.Response executeTransaction(PtpOperation.Request request)
 			throws TransportDataError, TransportIOError, TransportOperationFailed;
 		PtpOperation.Response executeTransaction(PtpOperation.Request request,
-							 DataLoadListener listener)
+												 DataLoadListener listener)
 			throws TransportDataError, TransportIOError, TransportOperationFailed;
 		void close() throws TransportDataError, TransportIOError, TransportOperationFailed,
-				    PtpExceptions.PtpProtocolViolation;
+							PtpExceptions.PtpProtocolViolation;
 	}
 
 	public interface PayloadBuffer {
@@ -90,11 +90,11 @@ public abstract class PtpTransport {
 
 	public abstract PtpDataType.DeviceInfoDataSet getDeviceInfo()
 		throws TransportOperationFailed, TransportDataError, TransportIOError,
-		       PtpExceptions.PtpProtocolViolation;
+			   PtpExceptions.PtpProtocolViolation;
 
 	public abstract Session openSession() throws TransportOperationFailed, TransportDataError,
-						     TransportIOError,
-						     PtpExceptions.PtpProtocolViolation;
+												 TransportIOError,
+												 PtpExceptions.PtpProtocolViolation;
 
 	public abstract boolean isConnected();
 	public abstract void connect(ResponderAddress address, HostId hostId)

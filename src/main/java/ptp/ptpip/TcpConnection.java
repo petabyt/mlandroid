@@ -27,104 +27,123 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
-
 public class TcpConnection {
-    private Socket mSocket;
-    private OutputStream mOut;
-    private InputStream mIn;
-    private long mLastActivityTimestamp;
-    private boolean mIsClosed = false;
+	private Socket mSocket;
+	private OutputStream mOut;
+	private InputStream mIn;
+	private long mLastActivityTimestamp;
+	private boolean mIsClosed = false;
 
-    private final static Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private final static Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    private BlockingQueue<PtpIpPacket> mPacketOutQueue;
+	private BlockingQueue<PtpIpPacket> mPacketOutQueue;
 
-    private void putBlocking(PtpIpPacket packet) {
-        while (true) {try {mPacketOutQueue.put(packet); return;} catch (InterruptedException e) {}}
-    }
+	private void putBlocking(PtpIpPacket packet) {
+		while (true) {
+			try {
+				mPacketOutQueue.put(packet);
+				return;
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 
+	private class TcpListener extends Thread {
+		private PtpIpPacket.ReadingListener mReadingListener = new PtpIpPacket.ReadingListener() {
+			@Override
+			public void onLoaded(PtpIpPacket packet, int loadedBytes) {
+				putBlocking(new PtpIpPacket.LoadStatus(packet, loadedBytes));
+			}
+		};
 
-    private class TcpListener extends Thread {
+		public void run() {
+			PtpIpPacket packet;
+			while (true) {
+				try {
+					packet = PtpIpPacket.readPacket(mIn, mReadingListener);
+					packet.setSourceConnection(TcpConnection.this);
+					mLastActivityTimestamp = System.currentTimeMillis();
+					LOG.info("PTPIP: Packet in  <== " + packet.toString());
+					putBlocking(packet);
+				} catch (IOException | PtpIpExceptions.MalformedPacket e) {
+					// did we trigger this ourselves? --> shutdown listener and don't notify
+					if ((e instanceof IOException) && mIsClosed)
+						return;
 
-        private PtpIpPacket.ReadingListener mReadingListener = new PtpIpPacket.ReadingListener() {
-            @Override public void onLoaded(PtpIpPacket packet, int loadedBytes) {
-                putBlocking(new PtpIpPacket.LoadStatus(packet, loadedBytes));
-            }
-        };
+					// something happened --> shutdown send error-packet upwards
+					LOG.severe("PTPIP: Error when receiving packet - closing connection! (" +
+							   e.getMessage() + ")");
+					try {
+						mIn.close();
+					} catch (Exception ex) {
+					}
+					try {
+						mOut.close();
+					} catch (Exception ex) {
+					}
 
-        public void run() {
-            PtpIpPacket packet;
-            while (true) {
-                try {
-                    packet = PtpIpPacket.readPacket(mIn, mReadingListener);
-                    packet.setSourceConnection(TcpConnection.this);
-                    mLastActivityTimestamp = System.currentTimeMillis();
-                    LOG.info("PTPIP: Packet in  <== " + packet.toString());
-                    putBlocking(packet);
-                }
-                catch (IOException | PtpIpExceptions.MalformedPacket e) {
-                    // did we trigger this ourselves? --> shutdown listener and don't notify
-                    if ((e instanceof IOException) && mIsClosed) return;
+					packet = new PtpIpPacket.Error(e);
+					packet.setSourceConnection(TcpConnection.this);
+					putBlocking(packet);
+					return;
+				}
+			}
+		}
+	}
 
-                    // something happened --> shutdown send error-packet upwards
-                    LOG.severe("PTPIP: Error when receiving packet - closing connection! (" + e.getMessage() + ")");
-                    try {mIn .close();} catch (Exception ex) {}
-                    try {mOut.close();} catch (Exception ex) {}
+	public TcpConnection(BlockingQueue<PtpIpPacket> receivedPacketQueue) {
+		mPacketOutQueue = receivedPacketQueue;
+	}
 
-                    packet = new PtpIpPacket.Error(e);
-                    packet.setSourceConnection(TcpConnection.this);
-                    putBlocking(packet);
-                    return;
-                }
-            }
-        }
-    }
+	public void connect(InetSocketAddress server) throws IOException {
+		try {
+			mSocket = new Socket();
+			mSocket.setSoTimeout(1000);
+			mSocket.setKeepAlive(true);
+			mSocket.setTcpNoDelay(true);
+			mSocket.setReuseAddress(true);
+			mSocket.connect(server, 2500);
+			mOut = mSocket.getOutputStream();
+			mIn = mSocket.getInputStream();
+			mLastActivityTimestamp = System.currentTimeMillis();
+		} catch (IOException e) {
+			LOG.severe("Error on establishing TCP connection - closing! (" + e.getMessage() + ")");
+			close();
+			throw e;
+		}
+		new TcpListener().start();
+	}
 
-
-    public TcpConnection(BlockingQueue<PtpIpPacket> receivedPacketQueue) {
-        mPacketOutQueue = receivedPacketQueue;
-    }
-
-    public void connect(InetSocketAddress server) throws IOException {
-        try {
-            mSocket = new Socket();
-            mSocket.setSoTimeout(1000);
-            mSocket.setKeepAlive(true);
-            mSocket.setTcpNoDelay(true);
-            mSocket.setReuseAddress(true);
-            mSocket.connect(server, 2500);
-            mOut = mSocket.getOutputStream();
-            mIn = mSocket.getInputStream();
-            mLastActivityTimestamp = System.currentTimeMillis();
-        } catch (IOException e) {
-            LOG.severe("Error on establishing TCP connection - closing! (" + e.getMessage() + ")");
-            close();
-            throw e;
-        }
-        new TcpListener().start();
-    }
-
-    public void sendPacket(PtpIpPacket packet) throws IOException {
-        LOG.info("PTPIP: Packet out ==> " + packet.toString());
-        if ((mSocket == null) || (mSocket.isClosed()) || (!mSocket.isConnected())) throw new IOException();
+	public void sendPacket(PtpIpPacket packet) throws IOException {
+		LOG.info("PTPIP: Packet out ==> " + packet.toString());
+		if ((mSocket == null) || (mSocket.isClosed()) || (!mSocket.isConnected()))
+			throw new IOException();
 
 		byte[] a = packet.serializePacket();
 		for (int i = 0; i < a.length; i++) {
 			System.out.print(a[i]);
 			System.out.print(" ");
 		}
-		
-        mOut.write(packet.serializePacket());
-        mOut.flush();
-        mLastActivityTimestamp = System.currentTimeMillis();
-    }
 
-    public void close() {
-        LOG.info("PTPIP: Closing TCP connection");
-        mIsClosed = true;
-        try {mIn .close();} catch (Exception e) {}
-        try {mOut.close();} catch (Exception e) {}
-    }
+		mOut.write(packet.serializePacket());
+		mOut.flush();
+		mLastActivityTimestamp = System.currentTimeMillis();
+	}
 
-    public long getLastActivityTimestamp() {return mLastActivityTimestamp;}
+	public void close() {
+		LOG.info("PTPIP: Closing TCP connection");
+		mIsClosed = true;
+		try {
+			mIn.close();
+		} catch (Exception e) {
+		}
+		try {
+			mOut.close();
+		} catch (Exception e) {
+		}
+	}
+
+	public long getLastActivityTimestamp() {
+		return mLastActivityTimestamp;
+	}
 }

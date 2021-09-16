@@ -50,8 +50,7 @@ public class PtpConnection {
 					//TODO: programmes might still hold references to sessions. They are invalidated now, so does it matter?
 
 					if (mListener != null)
-						mListener.onError(
-							((PtpEvent.Error)event).mException);
+						mListener.onError(((PtpEvent.Error)event).mException);
 				} else if (mListener != null)
 					mListener.onEvent(event);
 			}
@@ -93,7 +92,7 @@ public class PtpConnection {
 
 	public void connect(PtpTransport.ResponderAddress address, PtpTransport.HostId hostId)
 		throws PtpTransport.TransportOperationFailed, PtpTransport.TransportDataError,
-		       PtpTransport.TransportIOError, PtpExceptions.PtpProtocolViolation {
+			   PtpTransport.TransportIOError, PtpExceptions.PtpProtocolViolation {
 		mTransport.connect(address, hostId);
 		mEventListener = new EventListener();
 		mEventListener.start();
@@ -103,7 +102,7 @@ public class PtpConnection {
 
 	public PtpSession openSession()
 		throws PtpTransport.TransportOperationFailed, PtpTransport.TransportDataError,
-		       PtpTransport.TransportIOError, PtpExceptions.PtpProtocolViolation {
+			   PtpTransport.TransportIOError, PtpExceptions.PtpProtocolViolation {
 		PtpTransport.Session session = mTransport.openSession();
 
 		PtpSession ptpSession = new PtpSession(this, session);

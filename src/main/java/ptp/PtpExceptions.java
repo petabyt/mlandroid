@@ -31,8 +31,7 @@ public class PtpExceptions {
 
 	public static class OperationFailed extends PtpError {
 		public OperationFailed(String s, int responseCode) {
-			super("Responder failed on " + s + " (" +
-			      Integer.toHexString(responseCode) + ")!");
+			super("Responder failed on " + s + " (" + Integer.toHexString(responseCode) + ")!");
 		}
 	}
 

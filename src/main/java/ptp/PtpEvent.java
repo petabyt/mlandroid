@@ -44,7 +44,7 @@ public class PtpEvent {
 	public static final int EVENTCODE_CancelTransaction = 0x4001;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_CancelTransaction,
-						    "CancelTransaction");
+											"CancelTransaction");
 	}
 	public static final int EVENTCODE_ObjectAdded = 0x4002;
 	static {
@@ -52,8 +52,7 @@ public class PtpEvent {
 	}
 	public static final int EVENTCODE_ObjectRemoved = 0x4003;
 	static {
-		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_ObjectRemoved,
-						    "ObjectRemoved");
+		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_ObjectRemoved, "ObjectRemoved");
 	}
 	public static final int EVENTCODE_StoreAdded = 0x4004;
 	static {
@@ -66,22 +65,22 @@ public class PtpEvent {
 	public static final int EVENTCODE_DevicePropChanged = 0x4006;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_DevicePropChanged,
-						    "DevicePropChanged");
+											"DevicePropChanged");
 	}
 	public static final int EVENTCODE_ObjectInfoChanged = 0x4007;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_ObjectInfoChanged,
-						    "ObjectInfoChanged");
+											"ObjectInfoChanged");
 	}
 	public static final int EVENTCODE_DeviceInfoChanged = 0x4008;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_DeviceInfoChanged,
-						    "DeviceInfoChanged");
+											"DeviceInfoChanged");
 	}
 	public static final int EVENTCODE_RequestObjectTransfer = 0x4009;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_RequestObjectTransfer,
-						    "RequestObjectTransfer");
+											"RequestObjectTransfer");
 	}
 	public static final int EVENTCODE_StoreFull = 0x400a;
 	static {
@@ -94,17 +93,17 @@ public class PtpEvent {
 	public static final int EVENTCODE_StorageInfoChanged = 0x400c;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_StorageInfoChanged,
-						    "StorageInfoChanged");
+											"StorageInfoChanged");
 	}
 	public static final int EVENTCODE_CaptureCompleted = 0x400d;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_CaptureCompleted,
-						    "CaptureCompleted");
+											"CaptureCompleted");
 	}
 	public static final int EVENTCODE_UnreportedStatus = 0x400e;
 	static {
 		PtpEvent.EVENTCODE_DESCRIPTIONS.put(PtpEvent.EVENTCODE_UnreportedStatus,
-						    "UnreportedStatus");
+											"UnreportedStatus");
 	}
 
 	public static final int EVENTCODE_Internal = 0x40ee;
@@ -126,7 +125,7 @@ public class PtpEvent {
 		this(eventCode, new PtpDataType.UInt32(0xFFFFFFFF), params);
 	}
 	public PtpEvent(PtpDataType.EventCode eventCode, PtpDataType.UInt32 transactionId,
-			long[] params) {
+					long[] params) {
 		mEventCode = eventCode;
 		mTransactionId = transactionId;
 		mParameters = params;

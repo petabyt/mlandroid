@@ -23,43 +23,55 @@ import fm.magiclantern.app.PtpTransport;
 
 import java.io.IOException;
 
-
 public class PtpIpExceptions {
+	// ---------------------------------------------------------------------------------------------
+	// Assert functions
 
-    // ---------------------------------------------------------------------------------------------
-    // Assert functions
+	public static void testError(PtpIpPacket packet) throws IOError, MalformedPacket {
+		if (packet instanceof PtpIpPacket.Error) {
+			Exception e = ((PtpIpPacket.Error)packet).mException;
+			if (e instanceof IOException)
+				throw new IOError((IOException)e);
+			else
+				throw(MalformedPacket) e;
+		}
+	}
 
-    public static void testError(PtpIpPacket packet) throws IOError, MalformedPacket {
-        if (packet instanceof PtpIpPacket.Error) {
-            Exception e = ((PtpIpPacket.Error)packet).mException;
-            if (e instanceof IOException) throw new IOError((IOException) e);
-            else throw (MalformedPacket) e;
-        }
-    }
+	public static void testType(PtpIpPacket packet, Class expectedClass) throws ProtocolViolation {
+		if (!expectedClass.isAssignableFrom(packet.getClass()))
+			throw new ProtocolViolation("Wrong PacketType: Expected " +
+										expectedClass.getSimpleName() + ", received " +
+										packet.getClass().getSimpleName());
+	}
 
-    public static void testType(PtpIpPacket packet, Class expectedClass) throws ProtocolViolation {
-        if (!expectedClass.isAssignableFrom(packet.getClass()))
-            throw new ProtocolViolation("Wrong PacketType: Expected " + expectedClass.getSimpleName() + ", received " + packet.getClass().getSimpleName());
-    }
+	// ---------------------------------------------------------------------------------------------
+	// PtpIp Exception classes
 
-    // ---------------------------------------------------------------------------------------------
-    // PtpIp Exception classes
+	public static class IOError extends PtpTransport.TransportIOError {
+		public IOError(IOException e) {
+			super(e.toString(), e);
+		}
+		public IOError(String s, IOException e) {
+			super(s, e);
+		}
+	}
 
+	public static class OperationFailed extends PtpTransport.TransportOperationFailed {
+		public OperationFailed(String s, long responseCode) {
+			super("Responder failed on " + s +
+				  " (Response: " + String.format("0x%08x", responseCode) + ")!");
+		}
+	}
 
-    public static class IOError extends PtpTransport.TransportIOError {
-        public IOError(IOException e) {super(e.toString(), e);}
-        public IOError(String s, IOException e) {super(s, e);}
-    }
+	public static class ProtocolViolation extends PtpTransport.TransportDataError {
+		public ProtocolViolation(String s) {
+			super(s);
+		}
+	}
 
-    public static class OperationFailed extends PtpTransport.TransportOperationFailed {
-        public OperationFailed(String s, long responseCode) {super("Responder failed on " + s + " (Response: " + String.format("0x%08x", responseCode) + ")!");}
-    }
-
-    public static class ProtocolViolation extends PtpTransport.TransportDataError {
-        public ProtocolViolation(String s) {super(s);}
-    }
-
-    public static class MalformedPacket extends PtpTransport.TransportDataError {
-        public MalformedPacket(String s) {super(s);}
-    }
+	public static class MalformedPacket extends PtpTransport.TransportDataError {
+		public MalformedPacket(String s) {
+			super(s);
+		}
+	}
 }
