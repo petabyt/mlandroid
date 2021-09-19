@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<style>
 	html, body {
@@ -44,12 +45,21 @@
 		<button onclick="b.runEventProc('TurnOffDisplay')">Run "TurnOffDisplay"</button>
 		<button onclick="b.disconnect()">Disconnect</button>
 		<br>
-		<div id="htmllog">Log goes here<br></div>
+		<div id="htmllog"></div>
 	</div>
 </body>
 <script>
+var htmllog = document.getElementById('htmllog');
+
 function log(string) {
-	document.getElementById('htmllog').innerHTML += string + "<br>";
+	if (htmllog.children.length > 15) {
+		htmllog.children[0].remove();
+	}
+
+	htmllog.innerHTML += "<p>" + string + "</p>";
 }
+
+log("Magic Lantern Android v0.1");
+log("Created by Daniel C");
 </script>
 </html>
