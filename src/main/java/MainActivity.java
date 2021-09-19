@@ -102,6 +102,15 @@ public class MainActivity extends Activity {
 				PtpDataType.DeviceInfoDataSet deviceInfo = session.getConnection().getDeviceInfo();
 				log.webview("Model: " + deviceInfo.mModel);
 				log.webview("Firmware: " + deviceInfo.mDeviceVersion);
+
+				log.webview("Closing session...");
+				try {
+					session.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+					log.webview("Couldn't close session");
+					return;
+				}
 			}).start();
 		}
 
@@ -116,12 +125,7 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 					return;
 				}
-			}).start();
-		}
 
-		@JavascriptInterface
-		public void close() {
-			new Thread(() -> {
 				log.webview("Closing session...");
 				try {
 					session.close();
