@@ -44,12 +44,48 @@
 		<button onclick="b.runEventProc('TurnOnDisplay')">Run "TurnOnDisplay"</button>
 		<button onclick="b.runEventProc('TurnOffDisplay')">Run "TurnOffDisplay"</button>
 		<button onclick="b.disconnect()">Disconnect</button>
+		<button onclick="demo()">Demo</button>
+		<button onclick="killDemo()">Stop </button>
 		<br>
 		<div id="htmllog"></div>
 	</div>
 </body>
 <script>
 var htmllog = document.getElementById('htmllog');
+var demoi = 0;
+
+function main() {
+	log("Magic Lantern Android v0.1");
+	log("Created by Daniel C");
+}
+
+function demo() {
+	b.connect();
+
+	var i = 0;
+	var toggle = false;
+	demoi = setInterval(function() {
+		if (toggle) {
+			b.runEventProc('TurnOffDisplay')
+		} else {
+			b.runEventProc('TurnOnDisplay')
+		}
+
+		log("Iteration " + i);
+		i++;
+
+		toggle = !toggle;
+	}, 500);
+}
+
+function killDemo() {
+	if (demoi == 0) {
+		return;
+	}
+
+	clearInterval(demoi);
+	demoi = 0;
+}
 
 function log(string) {
 	if (htmllog.children.length > 15) {
@@ -59,7 +95,6 @@ function log(string) {
 	htmllog.innerHTML += "<p>" + string + "</p>";
 }
 
-log("Magic Lantern Android v0.1");
-log("Created by Daniel C");
+main();
 </script>
 </html>

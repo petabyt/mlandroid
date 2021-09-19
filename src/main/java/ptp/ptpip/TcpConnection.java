@@ -71,8 +71,13 @@ public class TcpConnection {
 						return;
 
 					// something happened --> shutdown send error-packet upwards
-					LOG.severe("PTPIP: Error when receiving packet - closing connection! (" +
-							   e.getMessage() + ")");
+					LOG.severe("PTPIP: Error when receiving packet - closing connection! (" + e.getMessage() + ")");
+
+					if (true) {
+						LOG.severe("Bypassing read time out...");
+						return;
+					}
+					
 					try {
 						mIn.close();
 					} catch (Exception ex) {
@@ -98,13 +103,15 @@ public class TcpConnection {
 	public void connect(InetSocketAddress server) throws IOException {
 		try {
 			mSocket = new Socket();
-			mSocket.setSoTimeout(1000);
+			mSocket.setSoTimeout(20000);
 			mSocket.setKeepAlive(true);
 			mSocket.setTcpNoDelay(true);
 			mSocket.setReuseAddress(true);
 			mSocket.connect(server, 2500);
+
 			mOut = mSocket.getOutputStream();
 			mIn = mSocket.getInputStream();
+
 			mLastActivityTimestamp = System.currentTimeMillis();
 		} catch (IOException e) {
 			LOG.severe("Error on establishing TCP connection - closing! (" + e.getMessage() + ")");

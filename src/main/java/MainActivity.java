@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		main.webview = new WebView(this);
+		main.webview.setWebContentsDebuggingEnabled(true);
 		WebSettings settings = main.webview.getSettings();
 		settings.setJavaScriptEnabled(true);
 
@@ -64,7 +65,7 @@ public class MainActivity extends Activity {
 			short[] guid = new short[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 										 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-			new Thread(() -> {
+			//new Thread(() -> {
 				try {
 					ipAddr = InetAddress.getByName("192.168.1.2");
 				} catch (UnknownHostException e) {
@@ -102,21 +103,12 @@ public class MainActivity extends Activity {
 				PtpDataType.DeviceInfoDataSet deviceInfo = session.getConnection().getDeviceInfo();
 				log.webview("Model: " + deviceInfo.mModel);
 				log.webview("Firmware: " + deviceInfo.mDeviceVersion);
-
-				log.webview("Closing session...");
-				try {
-					session.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-					log.webview("Couldn't close session");
-					return;
-				}
-			}).start();
+			//}).start();
 		}
 
 		@JavascriptInterface
 		public void runEventProc(String command) {
-			new Thread(() -> {
+			//new Thread(() -> {
 				log.webview("Running event proc...");
 				try {
 					session.eventProcedure(command);
@@ -125,21 +117,12 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 					return;
 				}
-
-				log.webview("Closing session...");
-				try {
-					session.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-					log.webview("Couldn't close session");
-					return;
-				}
-			}).start();
+			//}).start();
 		}
 
 		@JavascriptInterface
 		public void disconnect() {
-			new Thread(() -> {
+			//new Thread(() -> {
 				log.webview("Disconnecting...");
 				try {
 					connection.close();
@@ -148,7 +131,7 @@ public class MainActivity extends Activity {
 					log.webview("Couldn't disconnect");
 					return;
 				}
-			}).start();
+			//}).start();
 		}
 	}
 
