@@ -49,16 +49,22 @@ public class MainActivity extends Activity {
 		setContentView(main.webview);
 	}
 
-	// Access like "b.test()"
+	// Access like "b.connect()"
 	public class backend {
+		InetAddress ipAddr;
+		PtpTransport.ResponderAddress address;
+		PtpTransport.HostId hostId;
+
+		PtpTransport transport;
+		PtpConnection connection;
+		PtpSession session;
+		
 		@JavascriptInterface
 		public void connect() {
-			String friendlyName = "MyName.name";
 			short[] guid = new short[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 										 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 			new Thread(() -> {
-				InetAddress ipAddr;
 				try {
 					ipAddr = InetAddress.getByName("192.168.1.2");
 				} catch (UnknownHostException e) {
@@ -67,11 +73,10 @@ public class MainActivity extends Activity {
 				}
 
 				log.webview("Initializing...");
-				PtpTransport.ResponderAddress address = new PtpIpConnection.PtpIpAddress(ipAddr);
-				PtpTransport.HostId hostId =
-					new PtpIpConnection.PtpIpHostId(guid, friendlyName, 1, 1);
-				PtpTransport transport = new PtpIpConnection();
-				PtpConnection connection = new PtpConnection(transport);
+				address = new PtpIpConnection.PtpIpAddress(ipAddr);
+				hostId = new PtpIpConnection.PtpIpHostId(guid, "MyName.name", 1, 1);
+				transport = new PtpIpConnection();
+				connection = new PtpConnection(transport);
 
 				log.webview("Connecting...");
 				try {
@@ -85,7 +90,6 @@ public class MainActivity extends Activity {
 				log.webview("Connected. May need to press OK.");
 
 				log.webview("Opening a PTP session...");
-				PtpSession session;
 				try {
 					session = connection.openSession();
 				} catch (Exception e) {
@@ -98,22 +102,46 @@ public class MainActivity extends Activity {
 				PtpDataType.DeviceInfoDataSet deviceInfo = session.getConnection().getDeviceInfo();
 				log.webview("Model: " + deviceInfo.mModel);
 				log.webview("Firmware: " + deviceInfo.mDeviceVersion);
+			}).start();
+		}
 
+		@JavascriptInterface
+		public void runEventProc(String command) {
+			new Thread(() -> {
 				log.webview("Running event proc...");
 				try {
-					session.eventProcedure("EnableBootDisk");
+					session.eventProcedure(command);
 				} catch (Exception e) {
 					log.webview("Failed to run event proc.");
 					e.printStackTrace();
 					return;
 				}
+			}).start();
+		}
 
+		@JavascriptInterface
+		public void close() {
+			new Thread(() -> {
 				log.webview("Closing session...");
+				try {
+					session.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+					log.webview("Couldn't close session");
+					return;
+				}
+			}).start();
+		}
+
+		@JavascriptInterface
+		public void disconnect() {
+			new Thread(() -> {
+				log.webview("Disconnecting...");
 				try {
 					connection.close();
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.webview("Couldn't close session");
+					log.webview("Couldn't disconnect");
 					return;
 				}
 			}).start();

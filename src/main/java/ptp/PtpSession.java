@@ -35,6 +35,7 @@ public class PtpSession {
 		mConnection = connection;
 		mSession = session;
 	}
+
 	// TODO..: check deviceInfo which functions are allowed
 
 	public void close() throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation {
@@ -42,7 +43,6 @@ public class PtpSession {
 		mConnection.onSessionClosed(this);
 	}
 
-	// -----------------------------------------------------------------------------------------
 	// PTP transaction
 	// TODO: asynchronous requests should return transactionID as well
 
@@ -166,6 +166,7 @@ public class PtpSession {
 			   PtpExceptions.OperationFailed {
 		return getObject(objectHandle, null);
 	}
+
 	public byte[] getObject(PtpDataType.ObjectHandle objectHandle, final DataLoadListener listener)
 		throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation,
 			   PtpExceptions.OperationFailed {
@@ -190,6 +191,7 @@ public class PtpSession {
 			   PtpExceptions.OperationFailed {
 		return getThumb(objectHandle, null);
 	}
+
 	public byte[] getThumb(PtpDataType.ObjectHandle objectHandle, final DataLoadListener listener)
 		throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation,
 			   PtpExceptions.OperationFailed {
@@ -213,6 +215,7 @@ public class PtpSession {
 										 PtpExceptions.OperationFailed {
 		initiateCapture_(new PtpDataType.StorageID(0), new PtpDataType.ObjectFormatCode(0));
 	}
+
 	public void initiateCapture_(PtpDataType.StorageID storageID,
 								 PtpDataType.ObjectFormatCode objectFormatCode)
 		throws PtpTransport.TransportError, PtpExceptions.PtpProtocolViolation,
@@ -227,18 +230,19 @@ public class PtpSession {
 	}
 
 	public void eventProcedure(String command) throws PtpTransport.TransportError,
-													  PtpExceptions.PtpProtocolViolation,
-													  PtpExceptions.OperationFailed {
-		// 0x9052 execute event proc
-		PtpOperation.Request request =
-			PtpOperation.createRequest(PtpOperation.OPSCODE_RunEventProc);
+			PtpExceptions.PtpProtocolViolation, PtpExceptions.OperationFailed {
+		PtpOperation.Request request = PtpOperation.createRequest(PtpOperation.OPSCODE_RunEventProc);
 
 		request.mData = new PtpDataType.PtpString(command, false);
 
 		PtpOperation.Response response = mSession.executeTransaction(request);
 		response.validate();
 
-		if (!response.isSuccess())
-			throw new PtpExceptions.OperationFailed("RunEventProc", response.getResponseCode());
+		if (!response.isSuccess()) {
+			throw new PtpExceptions.OperationFailed(
+				"RunEventProc",
+				response.getResponseCode()
+			);
+		}
 	}
 }

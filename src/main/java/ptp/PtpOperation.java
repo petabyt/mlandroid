@@ -427,9 +427,7 @@ public class PtpOperation {
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------------
 	// Constructors
-
 	private PtpOperation(int operationCode, int minNumberRequestParameters,
 			 int maxNumberRequestParameters, int numberResponseParameters) {
 		this(operationCode, minNumberRequestParameters, maxNumberRequestParameters,
@@ -447,12 +445,11 @@ public class PtpOperation {
 		mNumberResponseParameters = numberResponseParameters;
 	}
 
-	// ---------------------------------------------------------------------------------------------
 	// Request/Response accessors
-
 	private Request createRequest() {
 		return new Request();
 	}
+
 	public static Request createRequest(int operationCode) {
 		PtpOperation operation = getOperation(operationCode);
 		return operation == null ? null : operation.createRequest();
@@ -461,14 +458,13 @@ public class PtpOperation {
 	private Response createRespone() {
 		return new Response();
 	}
+
 	public static Response createResponse(Request request) {
 		PtpOperation operation = getOperation(request.getOperationCode());
 		return operation == null ? null : operation.createRespone();
 	}
 
-	// ---------------------------------------------------------------------------------------------
 	// Helper functions
-
 	private boolean intArrayContains(int[] intArray, int element) {
 		for (int i : intArray)
 			if (i == element)

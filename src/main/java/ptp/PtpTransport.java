@@ -96,6 +96,8 @@ public abstract class PtpTransport {
 												 TransportIOError,
 												 PtpExceptions.PtpProtocolViolation;
 
+	// TODO: closeSession
+
 	public abstract boolean isConnected();
 	public abstract void connect(ResponderAddress address, HostId hostId)
 		throws TransportOperationFailed, TransportDataError, TransportIOError;
