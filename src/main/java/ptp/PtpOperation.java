@@ -384,7 +384,6 @@ public class PtpOperation {
 	protected int mNumberResponseParameters;
 	protected DataFlow mDataFlow;
 	protected Class mDataType;
-	protected int[] mAllowedRspCodes;
 
 	public class Request {
 		protected long[] mParameters = new long[0];
@@ -458,10 +457,6 @@ public class PtpOperation {
 		}
 
 		public void validate() throws PtpExceptions.PtpProtocolViolation {
-			if (!intArrayContains(mAllowedRspCodes, mRspCode.mValue))
-				throw new PtpExceptions.PtpProtocolViolation(
-					"Invalid response code (OpsCode: " + mOperationCode + ", Rspcode: " + mRspCode +
-					")");
 			//if ((mParameters == null) ||
 			//    (mParameters.length != mNumberResponseParameters))
 			//	throw new PtpExceptions.PtpProtocolViolation(
@@ -513,7 +508,6 @@ public class PtpOperation {
 		mMinNumberRequestParameters = maxNumberRequestParameters;
 		mDataType = dataType;
 		mDataFlow = dataFlow;
-		mAllowedRspCodes = allowedRspCodes;
 		mNumberResponseParameters = numberResponseParameters;
 	}
 
