@@ -1,100 +1,277 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<style>
+<meta lang="utf-8">
+<title>mlui</title>
+<style>
+	/*
+	top: 242424
+	icons top: 666666
+	menu green: 008300
+	menu grey: 333333
+	menu blue: 132384
+	*/
+
 	html, body {
 		width: 100%;
 		height: 100%;
-		overflow: hidden;
-		margin: 3px;
+		margin: 0;
 	}
 
-	#container * {
-		margin: 2px;
+	.abs {
+		position: absolute;
 	}
 
-	#container {
+	#top {
+		background: #242424;
+		height: 45px;
+		box-sizing: border-box;
+		padding: 5px;
+	}
+
+	#middle {
+		height: calc(100% - 45px - 45px);
+		background: black;
+		box-sizing: border-box;
+		padding: 10px;
+	}
+
+	.option {
 		width: 100%;
-		height: 100%;
+		padding-bottom: 5px;
+		margin-bottom: 5px;
+
+		user-select: none;
+		cursor: pointer;
+	}
+
+	.option:active {
+		background: #132384;
+	}
+
+	.option .aside {
+		position: absolute;
+		left: 50%;
+	}
+
+	.status {
+		width: 13px;
+		height: 13px;
+		float: left;
+		border-radius: 2px;
+		margin: 10px;
+	}
+
+	.status.on {
+		background: #008300;
+	}
+
+	.status.off {
+		background: #333333;
+	}
+
+	#bottom {
+		height: 45px;
+		background: #242424;
+		box-sizing: border-box;
+		padding: 4px;
+	}
+
+	#icons {
 		position: absolute;
 		top: 0px;
-		left: 0px;
-	}
-	
-	button {
-		padding: 5px 10px;
+		right: 0px;
+
+		padding-right: 10px;
 	}
 
-	button:active {
-		background: grey;
+	.icon {
+		float: right;
+		margin-top: 2px;
+		margin-right: 20px;
+
+		padding-bottom: 10px;
+		padding-right: 5px;
+		padding-left: 5px;
+		border-radius: 5px;
 	}
 
-	#htmllog {
-		height: 400px;
-		border: 1px solid black;
-		display: block;
+	.icon img {
+		width: 40px;
+		height: 40px;
 	}
-	</style>
+
+	screen {
+		display: none;
+	}
+
+	#console {
+		width: 400px;
+		height: 200px;
+		border: 2px solid white;
+		background: #333333;
+
+		position: absolute;
+		left: 30px;
+		bottom: 30px;
+
+		color: white;
+		padding: 10px;
+		box-sizing: border-box;
+		font-family: mono;
+
+		display: none;
+	}
+
+	big {
+		font-size: 200%;
+		font-family: Arial;
+		color: white;
+		font-weight: bold;
+	}
+
+	medium {
+		font-size: 170%;
+		font-family: Arial;
+		color: white;
+	}
+
+	small {
+		font-size: 100%;
+		font-family: Arial;
+		color: white;
+	}
+</style>
 </head>
 <body>
-	<div id="container">
-		<button onclick="b.connect()">Connect</button>
-		<button onclick="b.runEventProc('TurnOnDisplay')">Run "TurnOnDisplay"</button>
-		<button onclick="b.runEventProc('TurnOffDisplay')">Run "TurnOffDisplay"</button>
-		<button onclick="b.disconnect()">Disconnect</button>
-		<button onclick="demo()">Demo</button>
-		<button onclick="killDemo()">Stop </button>
-		<br>
-		<div id="htmllog"></div>
+	<div id="top">
+	<big id="menuTitle">magiclantern.css</big>
+	<div id="icons"></div>
 	</div>
+	<div id="middle">
+		<screen id="Settings">
+			<div class="option">
+				<div class="status on"></div>
+				<medium>Self Destruct Mode</medium>
+				<medium class="aside">Quick and painless</medium>
+			</div>
+			<div class="option">
+				<div class="status on"></div>
+				<medium>Card Ejection Speed</medium>
+				<medium class="aside">50mph</medium>
+			</div>
+			<div class="option">
+				<div class="status on"></div>
+				<medium>Bomb countdown</medium>
+				<medium class="aside">5s</medium>
+			</div>
+			<div class="option">
+				<div class="status off"></div>
+				<medium>Erase ROM</medium>
+			</div>
+			<div class="option on">
+				<div class="status off"></div>
+				<medium>Detonate internal camera time bomb</medium>
+			</div>
+			<div class="option on" onclick="menu.toggleConsole()">
+				<div class="status off"></div>
+				<medium>Toggle Console Visibility</medium>
+			</div>
+		</screen>
+		<screen id="Picture">
+			<div class="option">
+				<div class="status off"></div>
+				<medium></medium>
+				<medium class="aside">World</medium>
+			</div>
+		</screen>
+		<screen id="Movie">
+			<div class="option">
+				<div class="status off"></div>
+				<medium>Foo</medium>
+				<medium class="aside">Bar</medium>
+			</div>
+		</screen>
+	</div>
+	<div id="bottom">
+		<small>
+			<b>This is something that exists at the bottom.</b>
+			<br>This is a second line that also happens to exist here
+		</small>
+	</div>
+	<div id="console"></div>
 </body>
 <script>
-var htmllog = document.getElementById('htmllog');
-var demoi = 0;
-
-function main() {
-	log("Magic Lantern Android v0.1");
-	log("Created by Daniel C");
-}
-
-function demo() {
-	b.connect();
-
-	var i = 0;
-	var toggle = false;
-	demoi = setInterval(function() {
-		if (toggle) {
-			b.runEventProc('TurnOffDisplay')
-		} else {
-			b.runEventProc('TurnOnDisplay')
-		}
-
-		log("Iteration " + i);
-		i++;
-
-		toggle = !toggle;
-	}, 500);
-}
-
-function killDemo() {
-	if (demoi == 0) {
-		return;
-	}
-
-	clearInterval(demoi);
-	demoi = 0;
-}
-
 function log(string) {
-	if (htmllog.children.length > 15) {
-		htmllog.children[0].remove();
+	var console = document.getElementById("console");
+	if (console.children.length >= 10) {
+		console.children[0].remove();
 	}
 
-	htmllog.innerHTML += "<p>" + string + "</p>";
+	console.innerHTML += "<span>" + string + "<br></span>";
 }
 
-main();
+var menu = {
+	currentScreen: document.getElementById("Settings"),
+	currentIcon: null,
+	addIcon: function(image, name, code) {
+		var top = document.getElementById("icons");
+
+		var img = document.createElement("img");
+		img.src = image;
+
+		var div = document.createElement("div");
+		div.className = "icon";
+		div.name = name;
+		div.appendChild(img);
+
+		div.onclick = function() {
+			menu.currentIcon.style.backgroundColor = "transparent";
+			menu.currentIcon = div;
+			menu.currentIcon.style.backgroundColor = "black";
+
+			menu.currentScreen.style.display = "none";
+			menu.currentScreen = document.getElementById(name);
+			menu.currentScreen.style.display = "block";
+
+			document.getElementById("menuTitle").innerHTML = name;
+		};
+
+		top.appendChild(div);
+	},
+
+	gotoScreen: function(name) {
+		var icons = document.getElementById("icons");
+		for (var i = 0; i < icons.children.length; i++) {
+			if (icons.children[i].name == name) {
+				menu.currentIcon = icons.children[i];
+				menu.currentIcon.style.backgroundColor = "black";
+
+				menu.currentScreen.style.display = "none";
+				menu.currentScreen = document.getElementById(name);
+				menu.currentScreen.style.display = "block";
+
+				document.getElementById("menuTitle").innerHTML = name;
+				return;
+			}
+		}
+	},
+
+	toggleConsole: function() {
+		var console = document.getElementById("console");
+		if (console.style.display == "none") {
+			console.style.display = "block";
+		} else {
+			console.style.display = "none";
+		}
+	}
+}
+
+menu.addIcon("settings.png", "Settings");
+menu.addIcon("picture.png", "Picture");
+menu.addIcon("movie.png", "Movie");
+
+menu.gotoScreen("Settings");
+
+log("magiclantern.css tech demo")
 </script>
 </html>
