@@ -1,6 +1,7 @@
 <html>
 <head>
 <meta lang="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>mlui</title>
 <style>
 	/*
@@ -33,6 +34,8 @@
 		background: black;
 		box-sizing: border-box;
 		padding: 10px;
+
+		overflow: scroll;
 	}
 
 	.option {
@@ -48,9 +51,18 @@
 		background: #132384;
 	}
 
-	.option .aside {
-		position: absolute;
-		left: 50%;
+	@media only screen and (min-width: 500px) {
+		.option .aside {
+			position: sticky;
+			left: 50%;
+		}
+	}
+
+	@media only screen and (max-width: 500px) {
+		.option .aside {
+			display: block;
+			margin-left: 50px;
+		}
 	}
 
 	.status {
@@ -149,6 +161,19 @@
 	</div>
 	<div id="middle">
 		<screen id="Settings">
+			<div class="option on" onclick="menu.toggleConsole()">
+				<div class="status off"></div>
+				<medium>Toggle Console Visibility</medium>
+			</div>
+		</screen>
+		<screen id="Picture">
+			<div class="option">
+				<div class="status off"></div>
+				<medium>Hello</medium>
+				<medium class="aside">World</medium>
+			</div>
+		</screen>
+		<screen id="Movie">
 			<div class="option">
 				<div class="status on"></div>
 				<medium>Self Destruct Mode</medium>
@@ -172,24 +197,6 @@
 				<div class="status off"></div>
 				<medium>Detonate internal camera time bomb</medium>
 			</div>
-			<div class="option on" onclick="menu.toggleConsole()">
-				<div class="status off"></div>
-				<medium>Toggle Console Visibility</medium>
-			</div>
-		</screen>
-		<screen id="Picture">
-			<div class="option">
-				<div class="status off"></div>
-				<medium></medium>
-				<medium class="aside">World</medium>
-			</div>
-		</screen>
-		<screen id="Movie">
-			<div class="option">
-				<div class="status off"></div>
-				<medium>Foo</medium>
-				<medium class="aside">Bar</medium>
-			</div>
 		</screen>
 	</div>
 	<div id="bottom">
@@ -201,6 +208,8 @@
 	<div id="console"></div>
 </body>
 <script>
+document.getElementById("console").style.display = "none";
+
 function log(string) {
 	var console = document.getElementById("console");
 	if (console.children.length >= 10) {
@@ -270,7 +279,7 @@ menu.addIcon("settings.png", "Settings");
 menu.addIcon("picture.png", "Picture");
 menu.addIcon("movie.png", "Movie");
 
-menu.gotoScreen("Settings");
+menu.gotoScreen("Movie");
 
 log("magiclantern.css tech demo")
 </script>
