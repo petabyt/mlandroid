@@ -86,6 +86,8 @@
 		background: #242424;
 		box-sizing: border-box;
 		padding: 4px;
+
+		overflow: hidden;
 	}
 
 	#icons {
@@ -99,7 +101,7 @@
 	.icon {
 		float: right;
 		margin-top: 2px;
-		margin-right: 20px;
+		margin-right: 10px;
 
 		padding-bottom: 10px;
 		padding-right: 5px;
@@ -160,6 +162,24 @@
 	<div id="icons"></div>
 	</div>
 	<div id="middle">
+		<screen id="Demo">
+			<div class="option on" onclick="b.connect()">
+				<div class="status off"></div>
+				<medium>Connect</medium>
+			</div>
+			<div class="option on" onclick="demo()">
+				<div class="status off"></div>
+				<medium>Run EvProc Demo</medium>
+			</div>
+			<div class="option on" onclick="killDemo()">
+				<div class="status off"></div>
+				<medium>Stop EvProc Demo</medium>
+			</div>
+			<div class="option on" onclick="b.disconnect()">
+				<div class="status off"></div>
+				<medium>Disconnect</medium>
+			</div>
+		</screen>
 		<screen id="Settings">
 			<div class="option on" onclick="menu.toggleConsole()">
 				<div class="status off"></div>
@@ -219,6 +239,31 @@ function log(string) {
 	console.innerHTML += "<span>" + string + "<br></span>";
 }
 
+var demoi;
+
+function demo() {
+	b.connect();
+
+	var i = 0;
+	var toggle = false;
+	demoi = setInterval(function() {
+		if (toggle) {
+			b.runEventProc('TurnOffDisplay')
+		} else {
+			b.runEventProc('TurnOnDisplay')
+		}
+
+		log("Iteration " + i);
+		i++;
+
+		toggle = !toggle;
+	}, 500);
+}
+
+function killDemo() {
+	clearInterval(demoi);
+}
+
 var menu = {
 	currentScreen: document.getElementById("Settings"),
 	currentIcon: null,
@@ -275,6 +320,7 @@ var menu = {
 	}
 }
 
+menu.addIcon("demo.png", "Demo");
 menu.addIcon("settings.png", "Settings");
 menu.addIcon("picture.png", "Picture");
 menu.addIcon("movie.png", "Movie");
