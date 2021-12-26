@@ -1,6 +1,5 @@
-# Gradle 8 probably needed to compile correctly
-gflag := -Dorg.gradle.java.home=/usr/lib/jvm/java-8-openjdk-amd64
-
+# Load in desired version of Java
+gflag := -Dorg.gradle.java.home=~/openlogic-openjdk-8u262-b10-linux-32
 gflag += --info
 
 run:
@@ -8,9 +7,6 @@ run:
 
 comp:
 	sudo gradle build $(gflag)
-
-adb:
-	adb logcat --pid=`adb shell pidof -s fm.magiclantern.app`
 
 clean:
 	rm -rf build .externalNativeBuild
