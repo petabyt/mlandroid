@@ -1,39 +1,17 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://maven.google.com/' }
-        jcenter()
+        maven { url "https://maven.google.com/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath "com.android.tools.build:gradle:3.4.+"
     }
 }
+
 allprojects {
     repositories {
         mavenCentral()
-        maven { url 'https://maven.google.com/' }
+        maven { url "https://maven.google.com/" }
         jcenter()
     }
-}
-
-apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
-	//externalNativeBuild {
-    //    cmake {
-    //        path "backend/CMakeLists.txt"
-    //        version "3.16.3"
-    //    }
-    //}
-
-	compileOptions.with {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
-	}
-}
-
-dependencies {
-	implementation 'com.android.support:appcompat-v7:27.1.1'
 }
