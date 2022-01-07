@@ -1,12 +1,16 @@
-# Load in desired version of Java
-gflag := -Dorg.gradle.java.home=~/openlogic-openjdk-8u262-b10-linux-32
-gflag += --info
+GRADLE=sudo sh gradlew
 
-run:
-	sudo gradle installDebug $(gflag)
+test: local.properties
+	$(GRADLE) installDebug
 
-comp:
-	sudo gradle build $(gflag)
+build: local.properties
+	$(GRADLE) assembleDebug
 
 clean:
-	rm -rf build .externalNativeBuild
+	sudo rm -rf release build app/release app/build .gradle .idea
+
+local.properties:
+	echo "sdk.dir=/usr/lib/android-sdk/" > local.properties
+	echo "ndk.dir=/usr/lib/android-ndk/" >> local.properties
+
+.PHONY: clean build test
