@@ -1,9 +1,12 @@
 # The Magic Lantern Android App  
 Unofficial and unfinished Magic Lantern Android App.  
-Right now it only has basic PTP functionality and a
+Right now it only has basic PTP functionality and a  
 glorious replica of the Magic Lantern menu.
 
 <img src="screenshot.png" width="400">
+
+Uses a heavily modified version of `libptp`:  
+https://github.com/Fimagena/libptp
 
 # What does it do?
 https://github.com/petabyt/mlandroid/blob/master/src/main/java/ptp/PtpSession.java#L53  
